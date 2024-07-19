@@ -1,6 +1,7 @@
 import { join } from "path";
 import { PORT, PUBLIC_FOLDER } from "./config";
 import { router } from "./router";
+import { render } from "./html";
 
 function getPublicFilePath(path: string) {
   return join(process.cwd(), PUBLIC_FOLDER, path);
@@ -82,11 +83,11 @@ export const server = Bun.serve({
         let response;
         // JSX Renderer
         if (routerMatch.filePath.endsWith(".tsx")) {
-          // response = new Response(html, {
-          //     headers: {
-          //       "Content-Type": "text/html",
-          //     },
-          //   });
+          return new Response(await render(routerMatch.filePath, ctx), {
+            headers: {
+              "Content-Type": "text/html",
+            },
+          });
         }
         // Default behavior
         response = (
@@ -125,4 +126,6 @@ export const server = Bun.serve({
   port: PORT,
 });
 
-// console.log(`Listening on ${server.url}`);
+console.log(`Listening on ${server.url}`);
+
+console.log(Bun.env);
