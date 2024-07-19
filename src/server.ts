@@ -82,11 +82,6 @@ export const server = Bun.serve({
         let response;
         // JSX Renderer
         if (routerMatch.filePath.endsWith(".tsx")) {
-          // response = new Response(html, {
-          //     headers: {
-          //       "Content-Type": "text/html",
-          //     },
-          //   });
         }
         // Default behavior
         response = (
