@@ -119,5 +119,3 @@ export const server = Bun.serve({
   },
   port: PORT,
 });
-
-// console.log(`Listening on ${server.url}`);
