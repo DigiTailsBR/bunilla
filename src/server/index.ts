@@ -19,7 +19,7 @@ export function paramsToObject(params: URLSearchParams) {
   return result;
 }
 
-export interface ctxRequest {
+export interface ServerContext {
   req: Request;
   params: { [key: string]: string };
   query: { [key: string]: string };
@@ -61,7 +61,7 @@ export const server = Bun.serve({
     const routerMatch = router.match(url.pathname);
     const publicFile = await getPublicFile(url.pathname);
     // prepare context
-    const ctx: ctxRequest = {
+    const ctx: ServerContext = {
       req,
       params: routerMatch?.params || {},
       query: paramsToObject(url.searchParams),
