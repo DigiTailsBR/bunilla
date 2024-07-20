@@ -1,6 +1,6 @@
 {
   "name": "bunilla",
-  "module": "index.ts",
+  "module": "src/index.ts",
   "type": "module",
   "scripts": {
     "start": "bun ./src",
