@@ -47,11 +47,12 @@ export const server = Bun.serve({
     // try upgrade req to ws
     // const cookies = parseCookies(req.headers.get("Cookie"));
     const success = server.upgrade(req, {
-      data: {
-        createdAt: Date.now(),
-        channelId: new URL(req.url).searchParams.get("channelId"),
-        // authToken: cookies["X-Token"],
-      },
+      // example of upgrade with data from server
+      // data: {
+      //   createdAt: Date.now(),
+      //   channelId: new URL(req.url).searchParams.get("channelId"),
+      //   authToken: cookies["X-Token"],
+      // },
     });
     if (success) {
       return new Response("ok");
