@@ -94,10 +94,6 @@ export const server = Bun.serve({
       }
     }
     // 404s
-    if (url.pathname.endsWith(".ico")) {
-      return new Response();
-    }
-    // 404s
     return new Response("Page not found", { status: 404 });
   },
   //   error() {
