@@ -1,7 +1,6 @@
 import { join } from "path";
 import { PORT, PUBLIC_FOLDER } from "./config";
 import { router } from "./router";
-import { render } from "./html";
 
 function getPublicFilePath(path: string) {
   return join(process.cwd(), PUBLIC_FOLDER, path);
@@ -20,7 +19,7 @@ export function paramsToObject(params: URLSearchParams) {
   return result;
 }
 
-export interface ctxRequest {
+export interface ServerContext {
   req: Request;
   params: { [key: string]: string };
   query: { [key: string]: string };
@@ -48,11 +47,12 @@ export const server = Bun.serve({
     // try upgrade req to ws
     // const cookies = parseCookies(req.headers.get("Cookie"));
     const success = server.upgrade(req, {
-      data: {
-        createdAt: Date.now(),
-        channelId: new URL(req.url).searchParams.get("channelId"),
-        // authToken: cookies["X-Token"],
-      },
+      // example of upgrade with data from server
+      // data: {
+      //   createdAt: Date.now(),
+      //   channelId: new URL(req.url).searchParams.get("channelId"),
+      //   authToken: cookies["X-Token"],
+      // },
     });
     if (success) {
       return new Response("ok");
@@ -62,7 +62,7 @@ export const server = Bun.serve({
     const routerMatch = router.match(url.pathname);
     const publicFile = await getPublicFile(url.pathname);
     // prepare context
-    const ctx: ctxRequest = {
+    const ctx: ServerContext = {
       req,
       params: routerMatch?.params || {},
       query: paramsToObject(url.searchParams),
@@ -83,11 +83,6 @@ export const server = Bun.serve({
         let response;
         // JSX Renderer
         if (routerMatch.filePath.endsWith(".tsx")) {
-          return new Response(await render(routerMatch.filePath, ctx), {
-            headers: {
-              "Content-Type": "text/html",
-            },
-          });
         }
         // Default behavior
         response = (
@@ -98,10 +93,6 @@ export const server = Bun.serve({
         //@ts-expect-error
         throw new Error(error.toString());
       }
-    }
-    // 404s
-    if (url.pathname.endsWith(".ico")) {
-      return new Response();
     }
     // 404s
     return new Response("Page not found", { status: 404 });
@@ -125,7 +116,3 @@ export const server = Bun.serve({
   },
   port: PORT,
 });
-
-console.log(`Listening on ${server.url}`);
-
-console.log(Bun.env);
