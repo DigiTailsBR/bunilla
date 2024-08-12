@@ -88,7 +88,7 @@ export const server = Bun.serve({
         response = (
           await import(routerMatch.filePath + "?n=" + Date.now())
         ).default(ctx);
-        return response;
+        if (response) return response;
       } catch (error) {
         //@ts-expect-error
         throw new Error(error.toString());
